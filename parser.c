@@ -85,28 +85,29 @@ char** readLines(const char *fileName, int* lineCount) {
 
 void parseCompressedBoardData(const char *raw, Board board) {
     char *rawBoard = strdup(raw);
-    char *strRow = strtok(rawBoard, ROW_DELIMITER);
+    char *freeRawBoard = rawBoard;
+    char *strRow = strtok_r(rawBoard, ROW_DELIMITER, &rawBoard);
 
     int rowIndex = 0;
-    while (strRow != NULL && rowIndex < 10) {
-        char *strTile = strtok(strRow, COLUMN_DELIMITER);
+    while (strRow != NULL && rowIndex < BOARD_HEIGHT) {
+        char *strTile = strtok_r(strRow, COLUMN_DELIMITER, &strRow);
         int columnIndex = 0;
 
-        while (strTile != NULL && columnIndex < 10) {
+        while (strTile != NULL && columnIndex < BOARD_WIDTH) {
             if (strstr(strTile, TILE_DELIMITER) != NULL) {
-                char *token = strtok(strTile, TILE_DELIMITER);
+                char *token = strtok_r(strTile, TILE_DELIMITER, &strTile);
 
                 if (token != NULL) {
                     int tileId = atoi(token);
                     struct BoardTile tile;
 
                     if (tileId == ONEWAY) {
-                        token = strtok(NULL, TILE_DELIMITER);
+                        token = strtok_r(NULL, TILE_DELIMITER, &strTile);
                         int orientation = atoi(token);
                         tile = createOneWayTile(orientation);
                     } 
                     if (tileId == BOMB) {
-                        token = strtok(NULL, TILE_DELIMITER);
+                        token = strtok_r(NULL, TILE_DELIMITER, &strTile);
                         int fuse = atoi(token);
                         tile = createBombTile(fuse);
                     }
@@ -118,13 +119,13 @@ void parseCompressedBoardData(const char *raw, Board board) {
                 board[rowIndex][columnIndex] = createBoardTile(tileId);
             }
 
-            strTile = strtok(NULL, COLUMN_DELIMITER);
+            strTile = strtok_r(NULL, COLUMN_DELIMITER, &strRow);
             columnIndex++;
         }
 
-        strRow = strtok(NULL, ROW_DELIMITER);
+        strRow = strtok_r(NULL, ROW_DELIMITER, &rawBoard);
         rowIndex++;
     }
 
-    free(rawBoard);
+    free(freeRawBoard);
 }

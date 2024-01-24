@@ -8,10 +8,10 @@ void printBoard(const Board board) {
         for (int j = 0; j < BOARD_WIDTH; j++) {
             int tileId = board[i][j].id;
 
-            // Determine padding based on the number of digits
+            // Determine padding based on the number of digits.
             int padding = (tileId < 10) ? 2 : 1;
 
-            // Print the ID with padding
+            // Print the ID with padding.
             printf("%*d ", padding, tileId);
         }
         printf("\n");
@@ -27,6 +27,7 @@ int main(int argc, char *argv[]) {
     for (int i = 0; i < lineCount; i++) {
         Board board;
         parseCompressedBoardData(rawLines[i], board);
+        printf("\nBOARD:\n");
         printBoard(board);
         free(rawLines[i]);  // Free memory for each line.
     }
