@@ -1,3 +1,5 @@
+#include <stdint.h>
+
 enum TileType {
     EMPTY,
     WALL,
@@ -20,7 +22,7 @@ enum Direction {
     RIGHT,
     DOWN,
     LEFT,
-}
+};
 
 struct OneWayTile {
     enum TileType id;

@@ -7,11 +7,15 @@
 #define LEVELS_FILE "levels.txt"
 
 char* identifyFile() {
-    char fileName[MAX_FILE_NAME_LENGTH];
+    char* fileName = (char*)malloc(MAX_FILE_NAME_LENGTH * sizeof(char));
+    if (fileName == NULL) {
+        perror("Fatal memory allocation error.");
+        exit(1);
+    }
 
     promptInput:
     printf("Enter the levels file path or enter for default (" LEVELS_FILE "): ");
-    fgets(fileName, sizeof(fileName), stdin);
+    fgets(fileName, MAX_FILE_NAME_LENGTH, stdin);
 
     if (fileName[strlen(fileName) - 1] == '\n') { // Remove newline character if present.
         fileName[strlen(fileName) - 1] = '\0';
@@ -28,14 +32,15 @@ char* identifyFile() {
         goto promptInput;
     }
 
+    fclose(file);
     return fileName;
 }
 
 char** readLines(const char *fileName, int* lineCount) {
-    FILE* file = fopen(filename, "r");
+    FILE* file = fopen(fileName, "r");
     if (file == NULL) {
         perror("Error opening file");
-        exit(EXIT_FAILURE);
+        exit(1);
     }
 
     // Count the number of lines in the file.
@@ -52,7 +57,7 @@ char** readLines(const char *fileName, int* lineCount) {
     char** lines = (char**)malloc(count * sizeof(char*));
     if (lines == NULL) {
         perror("Fatal memory allocation error.");
-        exit(EXIT_FAILURE);
+        exit(1);
     }
 
     // Read each line and store it in the array.
@@ -60,11 +65,11 @@ char** readLines(const char *fileName, int* lineCount) {
         lines[i] = (char*)malloc(MAX_LINE_LENGTH * sizeof(char));
         if (lines[i] == NULL) {
             perror("Fatal memory allocation error.");
-            exit(EXIT_FAILURE);
+            exit(1);
         }
         if (fgets(lines[i], MAX_LINE_LENGTH, file) == NULL) {
             perror("Error reading line from file.");
-            exit(EXIT_FAILURE);
+            exit(1);
         }
     }
 
