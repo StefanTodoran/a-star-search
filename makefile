@@ -1,6 +1,6 @@
 CC = gcc
 CFLAGS = -Wall
-SRC = main.c parser.c logic.c
+SRC = main.c parser.c
 OBJ = $(SRC:.c=.o)
 EXECUTABLE = astar
 

@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include "logic.h"
 
 #define MAX_FILE_NAME_LENGTH 100
 #define MAX_LINE_LENGTH 300 // TODO: May need to tweak this later.
@@ -76,4 +77,54 @@ char** readLines(const char *fileName, int* lineCount) {
     fclose(file);
     *lineCount = count;
     return lines;
+}
+
+#define ROW_DELIMITER "/"
+#define COLUMN_DELIMITER ","
+#define TILE_DELIMITER "."
+
+void parseCompressedBoardData(const char *raw, Board board) {
+    char *rawBoard = strdup(raw);
+    char *strRow = strtok(rawBoard, ROW_DELIMITER);
+
+    int rowIndex = 0;
+    while (strRow != NULL && rowIndex < 10) {
+        char *strTile = strtok(strRow, COLUMN_DELIMITER);
+        int columnIndex = 0;
+
+        while (strTile != NULL && columnIndex < 10) {
+            if (strstr(strTile, TILE_DELIMITER) != NULL) {
+                char *token = strtok(strTile, TILE_DELIMITER);
+
+                if (token != NULL) {
+                    int tileId = atoi(token);
+                    struct BoardTile tile;
+
+                    if (tileId == ONEWAY) {
+                        token = strtok(NULL, TILE_DELIMITER);
+                        int orientation = atoi(token);
+                        tile = createOneWayTile(orientation);
+                    } 
+                    if (tileId == BOMB) {
+                        token = strtok(NULL, TILE_DELIMITER);
+                        int fuse = atoi(token);
+                        tile = createBombTile(fuse);
+                    }
+
+                    board[rowIndex][columnIndex] = tile;
+                }
+            } else {
+                int tileId = atoi(strTile);
+                board[rowIndex][columnIndex] = createBoardTile(tileId);
+            }
+
+            strTile = strtok(NULL, COLUMN_DELIMITER);
+            columnIndex++;
+        }
+
+        strRow = strtok(NULL, ROW_DELIMITER);
+        rowIndex++;
+    }
+
+    free(rawBoard);
 }
