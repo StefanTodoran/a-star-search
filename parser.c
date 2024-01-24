@@ -37,6 +37,27 @@ char* identifyFile() {
     return fileName;
 }
 
+int identifyLevel(int numLevels) {
+    int targetLevel;
+
+    promptInput:
+    printf("Enter the index of the level to select: ");
+    int readStatus = scanf("%d", &targetLevel);
+
+    if (readStatus != 1) {
+        printf("Error: Invalid input, must enter a single integer.\n");
+        while (getchar() != '\n');  // Keep reading characters to clear input buffer.
+        goto promptInput;
+    }
+
+    if (targetLevel >= numLevels) {
+        printf("Error: Invalid index. Level file only contains %d levels.\n", targetLevel);
+        goto promptInput;
+    }
+
+    return targetLevel;
+}
+
 char** readLines(const char *fileName, int* lineCount) {
     FILE* file = fopen(fileName, "r");
     if (file == NULL) {

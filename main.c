@@ -23,15 +23,16 @@ int main(int argc, char *argv[]) {
 
     int lineCount;
     char** rawLines = readLines(fileName, &lineCount);
+    int targetLevel = identifyLevel(lineCount);
+
+    Board board;
+    parseCompressedBoardData(rawLines[targetLevel], board);
+    printf("\nBOARD:\n");
+    printBoard(board);
 
     for (int i = 0; i < lineCount; i++) {
-        Board board;
-        parseCompressedBoardData(rawLines[i], board);
-        printf("\nBOARD:\n");
-        printBoard(board);
         free(rawLines[i]);  // Free memory for each line.
     }
-
     // Free memory for the array of strings.
     free(rawLines);
 
