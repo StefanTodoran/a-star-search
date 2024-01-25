@@ -1,8 +1,8 @@
+#include <stdio.h>
+#include <stdlib.h>
 #include "util.h"
 #include "logic.h"
 #include "parser.h"
-#include <stdio.h>
-#include <stdlib.h>
 
 void printBoard(const Board board) {
     for (int i = 0; i < BOARD_HEIGHT; i++) {
@@ -15,7 +15,7 @@ void printBoard(const Board board) {
             // Print the ID with padding.
             printf("%s%*d ", tileColors[tileId], padding, tileId);
         }
-        printf("\n");
+        printf(RESET "\n");
     }
 }
 
