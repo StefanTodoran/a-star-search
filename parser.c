@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include "util.h"
 #include "logic.h"
 
 #define MAX_FILE_NAME_LENGTH 100
@@ -15,7 +16,7 @@ char* identifyFile() {
     }
 
     promptInput:
-    printf("Enter the levels file path or enter for default (" LEVELS_FILE "): ");
+    printf("Enter the levels file path or " BOLD "enter" RESET " for default (" LEVELS_FILE "): ");
     fgets(fileName, MAX_FILE_NAME_LENGTH, stdin);
 
     if (fileName[strlen(fileName) - 1] == '\n') { // Remove newline character if present.

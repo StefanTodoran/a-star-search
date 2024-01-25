@@ -1,7 +1,7 @@
 #ifndef LOGIC
 #define LOGIC
 
-#include <stdint.h>
+#include <stdbool.h>
 
 enum TileType {
     EMPTY,
@@ -31,7 +31,7 @@ struct BoardTile {
     enum TileType id;
     union {
         enum Direction orientation; // For ONEWAY tiles.
-        int32_t fuse; // For BOMB tiles.
+        int fuse; // For BOMB tiles.
     };
 };
 
@@ -42,5 +42,19 @@ struct BoardTile {
 #define BOARD_HEIGHT 14
 #define BOARD_WIDTH 8
 typedef struct BoardTile Board[BOARD_HEIGHT][BOARD_WIDTH];
+
+struct Position {
+    int x;
+    int y;
+};
+
+struct GameState {
+    Board board;
+    struct Position player;
+    int maxCoins;
+    int coins;
+    int keys;
+    bool won;
+};
 
 #endif  // LOGIC

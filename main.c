@@ -1,3 +1,4 @@
+#include "util.h"
 #include "logic.h"
 #include "parser.h"
 #include <stdio.h>
@@ -12,7 +13,7 @@ void printBoard(const Board board) {
             int padding = (tileId < 10) ? 2 : 1;
 
             // Print the ID with padding.
-            printf("%*d ", padding, tileId);
+            printf("%s%*d ", tileColors[tileId], padding, tileId);
         }
         printf("\n");
     }
