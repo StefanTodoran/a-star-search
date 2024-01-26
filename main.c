@@ -22,6 +22,10 @@ void printBoard(const Board board, const Position player) {
     }
 }
 
+void printInventory(GameState *game) {
+    printf("%d keys, %d/%d coins\n", game->keys, game->coins, game->maxCoins);
+}
+
 int main(int argc, char *argv[]) {
     const char* fileName = identifyFile();
 
@@ -42,8 +46,10 @@ int main(int argc, char *argv[]) {
     free(rawLines);
 
     while (true) {
-        system("clear");
+        // system("clear");
         printBoard(game.board, game.player);
+        printInventory(&game);
+
         enum Direction move = promptPlayerMove();
         GameState* next = doGameMove(&game, move);
         game = *next;
