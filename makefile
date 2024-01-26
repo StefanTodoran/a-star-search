@@ -1,6 +1,6 @@
 CC = gcc
 CFLAGS = -Wall
-SRC = main.c parser.c util.c
+SRC = $(wildcard *.c)
 OBJ = $(SRC:.c=.o)
 EXECUTABLE = astar
 

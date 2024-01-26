@@ -4,7 +4,7 @@
 #include "logic.h"
 #include "parser.h"
 
-void printBoard(const Board board) {
+void printBoard(const Board board, const Position player) {
     for (int i = 0; i < BOARD_HEIGHT; i++) {
         for (int j = 0; j < BOARD_WIDTH; j++) {
             int tileId = board[i][j].id;
@@ -12,8 +12,11 @@ void printBoard(const Board board) {
             // Determine padding based on the number of digits.
             int padding = (tileId < 10) ? 2 : 1;
 
-            // Print the ID with padding.
-            printf("%s%*d ", tileColors[tileId], padding, tileId);
+            if (i == player.y && j == player.x) { // Display the player with padding.
+                printf("%s%*s ", RESET BOLD, padding, "P");
+            } else { // Print the ID with padding.
+                printf("%s%*d ", tileColors[tileId], padding, tileId);
+            }
         }
         printf(RESET "\n");
     }
@@ -28,8 +31,11 @@ int main(int argc, char *argv[]) {
 
     Board board;
     parseCompressedBoardData(rawLines[targetLevel], board);
-    printf("\nBOARD:\n");
-    printBoard(board);
+    
+    GameState game;
+    initializeGame(board, &game);
+
+    printBoard(game.board, game.player);
 
     for (int i = 0; i < lineCount; i++) {
         free(rawLines[i]);  // Free memory for each line.

@@ -11,7 +11,7 @@
 #define MAG "\033[35m"
 #define CYN "\033[36m"
 
-#define WALL "\033[0m\033[1m\033[47m"
+#define WALL_STYLE "\033[0m\033[1m\033[47m"
 // #define CRATE "" RESET MAG "\033[45m"
 
 extern const char* tileColors[];

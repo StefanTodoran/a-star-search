@@ -2,7 +2,7 @@
 
 const char* tileColors[] = {
     RESET, // EMPTY
-    WALL, // WALL
+    WALL_STYLE, // WALL
     RESET GRN, // DOOR
     RESET GRN, // KEY
     RESET MAG, // CRATE

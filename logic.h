@@ -43,18 +43,20 @@ struct BoardTile {
 #define BOARD_WIDTH 8
 typedef struct BoardTile Board[BOARD_HEIGHT][BOARD_WIDTH];
 
-struct Position {
+typedef struct {
     int x;
     int y;
-};
+} Position;
 
-struct GameState {
+typedef struct {
     Board board;
-    struct Position player;
+    Position player;
     int maxCoins;
     int coins;
     int keys;
     bool won;
-};
+} GameState;
+
+void initializeGame(Board board, GameState *game);
 
 #endif  // LOGIC
