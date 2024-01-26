@@ -103,12 +103,13 @@ bool canWalkTile(GameState *next, int y, int x, enum Direction direction) {
         return true; // We can only walk on the flag if we have all the coins!
     }
 
-    enum TileType walkable[] = { EMPTY, SPAWN };
+    enum TileType walkable[] = { EMPTY, SPAWN, ONEWAY };
     // if (extra) walkable = walkable.concat(extra);
     size_t numWalkables = sizeof(walkable) / sizeof(walkable[0]);
 
     bool canWalk = tileTypeIncluded(targetTile.id, walkable, numWalkables);
     if (targetTile.id == ONEWAY && !canWalkOneWay(direction, targetTile)) {
+        printf("bad oneway");
         return false;
     }
 
@@ -116,7 +117,7 @@ bool canWalkTile(GameState *next, int y, int x, enum Direction direction) {
 }
 
 bool attemptMove(GameState* next, int y, int x, enum Direction direction) {
-    if (canWalkTile(y, x, next, direction)) { // extra: [ONEWAY]
+    if (canWalkTile(next, y, x, direction)) { // extra: [ONEWAY]
         next->player.x = x;
         next->player.y = y;
         return true;
@@ -212,10 +213,9 @@ GameState* doGameMove(GameState *game, enum Direction move) {
         next->board[oneFurther.y][oneFurther.x] = moveToTile;
     }
 
-    next->player = moveTo;
+    bool moved = attemptMove(next, moveTo.y, moveTo.x, move);
     return next;
 
-    // const moved = attemptMove(moveTo.y, moveTo.x, next, move);
     // if (moved) {
     //     // Tile entity logic handling. If we haven't moved, we shouldn't
     //     // decrease bomb fuse (invalid moves shouldn't count as a timestep).

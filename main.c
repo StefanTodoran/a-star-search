@@ -9,12 +9,12 @@ void printBoard(const Board board, const Position player) {
         for (int j = 0; j < BOARD_WIDTH; j++) {
             int tileId = board[i][j].id;
 
-            // Determine padding based on the number of digits.
-            int padding = (tileId < 10) ? 2 : 1;
 
             if (i == player.y && j == player.x) { // Display the player with padding.
-                printf("%s%*s ", RESET BOLD, padding, "P");
-            } else { // Print the ID with padding.
+                printf("%s %s ", RESET BOLD, "P");
+            } else {
+                // Determine padding based on the number of digits.
+                int padding = (tileId < 10) ? 2 : 1;
                 printf("%s%*d ", tileColors[tileId], padding, tileId);
             }
         }
