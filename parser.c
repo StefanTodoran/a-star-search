@@ -59,6 +59,30 @@ int identifyLevel(int numLevels) {
     return targetLevel;
 }
 
+enum Direction promptPlayerMove() {
+    printf("Enter desired move (WASD): ");
+    
+    promptInput:
+    int ch = getchar();
+
+    switch (ch) {
+        case 'w':
+        case 'W':
+            return UP;
+        case 'a':
+        case 'A':
+            return LEFT;
+        case 's':
+        case 'S':
+            return DOWN;
+        case 'd':
+        case 'D':
+            return RIGHT;
+        default:
+            goto promptInput;
+    }
+}
+
 char** readLines(const char *fileName, int* lineCount) {
     FILE* file = fopen(fileName, "r");
     if (file == NULL) {

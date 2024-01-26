@@ -35,13 +35,19 @@ int main(int argc, char *argv[]) {
     GameState game;
     initializeGame(board, &game);
 
-    printBoard(game.board, game.player);
-
     for (int i = 0; i < lineCount; i++) {
         free(rawLines[i]);  // Free memory for each line.
     }
     // Free memory for the array of strings.
     free(rawLines);
+
+    while (true) {
+        system("clear");
+        printBoard(game.board, game.player);
+        enum Direction move = promptPlayerMove();
+        GameState* next = doGameMove(&game, move);
+        game = *next;
+    }
 
     return 0;
 }

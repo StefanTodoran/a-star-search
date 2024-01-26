@@ -58,5 +58,6 @@ typedef struct {
 } GameState;
 
 void initializeGame(Board board, GameState *game);
+GameState* doGameMove(GameState *game, enum Direction move);
 
 #endif  // LOGIC
