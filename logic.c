@@ -109,7 +109,6 @@ bool canWalkTile(GameState *next, int y, int x, enum Direction direction) {
 
     bool canWalk = tileTypeIncluded(targetTile.id, walkable, numWalkables);
     if (targetTile.id == ONEWAY && !canWalkOneWay(direction, targetTile)) {
-        printf("bad oneway");
         return false;
     }
 
@@ -123,6 +122,10 @@ bool attemptMove(GameState* next, int y, int x, enum Direction direction) {
         return true;
     }
     return false;
+}
+
+bool winCondition(GameState* next) {
+  return next->board[next->player.y][next->player.x].id == FLAG && (next->coins == next->maxCoins);
 }
 
 GameState* doGameMove(GameState *game, enum Direction move) {
@@ -214,33 +217,32 @@ GameState* doGameMove(GameState *game, enum Direction move) {
     }
 
     bool moved = attemptMove(next, moveTo.y, moveTo.x, move);
+
+    if (moved) {
+        // Tile entity logic handling. If we haven't moved, we shouldn't
+        // decrease bomb fuse (invalid moves shouldn't count as a timestep).
+
+        for (int i = 0; i < BOARD_HEIGHT; i++) {
+            for (int j = 0; j < BOARD_WIDTH; j++) {
+                struct BoardTile* tile = &next->board[i][j];
+
+                if (tile->id == BOMB) {
+                    tile->fuse--;
+
+                    if (tile->fuse == 0) {
+                        struct BoardTile littleExplosion = createBoardTile(LITTLE_EXPLOSION);
+                        if (boundTileAt(next->board, i - 1, j).id == CRATE) { next->board[i - 1][j] = littleExplosion; }
+                        if (boundTileAt(next->board, i + 1, j).id == CRATE) { next->board[i + 1][j] = littleExplosion; }
+                        if (boundTileAt(next->board, i, j - 1).id == CRATE) { next->board[i][j - 1] = littleExplosion; }
+                        if (boundTileAt(next->board, i, j + 1).id == CRATE) { next->board[i][j + 1] = littleExplosion; }
+
+                        next->board[i][j] = createBoardTile(EXPLOSION);
+                    }
+                }
+            }
+        }
+    }
+
+    next->won = winCondition(next);
     return next;
-
-    // if (moved) {
-    //     // Tile entity logic handling. If we haven't moved, we shouldn't
-    //     // decrease bomb fuse (invalid moves shouldn't count as a timestep).
-
-    //     for (let i = 0; i < BOARD_HEIGHT; i++) {
-    //         for (let j = 0; j < BOARD_WIDTH; j++) {
-    //             const tile = next->board[i][j];
-
-    //             if (tile.id == TileType.BOMB) {
-    //                 tile.fuse--;
-
-    //                 if (tile.fuse == 0) {
-    //                     const littleExplosion: SimpleTile = { id: TileType.LITTLE_EXPLOSION };
-    //                     if (boundTileAt(i - 1, j, next->board).id == TileType.CRATE) { next->board[i - 1][j] = littleExplosion; }
-    //                     if (boundTileAt(i + 1, j, next->board).id == TileType.CRATE) { next->board[i + 1][j] = littleExplosion; }
-    //                     if (boundTileAt(i, j - 1, next->board).id == TileType.CRATE) { next->board[i][j - 1] = littleExplosion; }
-    //                     if (boundTileAt(i, j + 1, next->board).id == TileType.CRATE) { next->board[i][j + 1] = littleExplosion; }
-
-    //                     next->board[i][j] = { id: TileType.EXPLOSION };
-    //                 }
-    //             }
-    //         }
-    //     }
-    // }
-
-    // next->won = winCondition(next);
-    // return next;
 }

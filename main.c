@@ -7,11 +7,15 @@
 void printBoard(const Board board, const Position player) {
     for (int i = 0; i < BOARD_HEIGHT; i++) {
         for (int j = 0; j < BOARD_WIDTH; j++) {
-            int tileId = board[i][j].id;
+            struct BoardTile tile = board[i][j];
+            int tileId = tile.id;
 
-
-            if (i == player.y && j == player.x) { // Display the player with padding.
+            if (i == player.y && j == player.x) {
                 printf("%s %s ", RESET BOLD, "P");
+            } else if (tileId == BOMB) {
+                // Determine padding based on the fuse timer.
+                int padding = (tile.fuse < 10) ? 2 : 1;
+                printf("%s%*d ", tileColors[tileId], padding, tile.fuse);
             } else {
                 // Determine padding based on the number of digits.
                 int padding = (tileId < 10) ? 2 : 1;
@@ -46,13 +50,15 @@ int main(int argc, char *argv[]) {
     free(rawLines);
 
     while (true) {
-        // system("clear");
+        system("clear");
         printBoard(game.board, game.player);
         printInventory(&game);
 
         enum Direction move = promptPlayerMove();
         GameState* next = doGameMove(&game, move);
         game = *next;
+
+        if (game.won) break;
     }
 
     return 0;
