@@ -61,5 +61,8 @@ int main(int argc, char *argv[]) {
         if (game.won) break;
     }
 
+    // printf("\rValue of X is: %d", x/114);
+    // fflush(stdout);
+
     return 0;
 }
