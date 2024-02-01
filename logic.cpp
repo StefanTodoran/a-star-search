@@ -85,10 +85,10 @@ bool tileTypeIncluded(enum TileType type, enum TileType validValues[], size_t nu
 }
 
 bool canWalkOneWay(enum Direction direction, struct BoardTile tile) {
-    if (direction == UP && tile.orientation == DOWN) return false;
-    if (direction == DOWN && tile.orientation == UP) return false;
-    if (direction == LEFT && tile.orientation == RIGHT) return false;
-    if (direction == RIGHT && tile.orientation == LEFT) return false;
+    if (direction == Direction::UP && tile.orientation == Direction::DOWN) return false;
+    if (direction == Direction::DOWN && tile.orientation == Direction::UP) return false;
+    if (direction == Direction::LEFT && tile.orientation == Direction::RIGHT) return false;
+    if (direction == Direction::RIGHT && tile.orientation == Direction::LEFT) return false;
 
     return true;
 }

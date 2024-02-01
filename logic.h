@@ -36,9 +36,10 @@ struct BoardTile {
 };
 
 #define emptyTile ((struct BoardTile){.id = EMPTY})
-#define createBoardTile(type) ((struct BoardTile){.id = (type)})
+#define createBoardTile(type) ((struct BoardTile){.id = static_cast<enum TileType>(type)})
 #define createBombTile(fuse) ((struct BoardTile){.id = BOMB, .fuse = (fuse)})
-#define createOneWayTile(orientation) ((struct BoardTile){.id = ONEWAY, .orientation = (orientation)})
+#define createOneWayTile(orientation) ((struct BoardTile){.id = ONEWAY, .orientation = static_cast<enum Direction>(orientation)})
+
 
 #define BOARD_HEIGHT 14
 #define BOARD_WIDTH 8

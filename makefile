@@ -1,12 +1,12 @@
-CC = gcc
-CFLAGS = -Wall
-SRC = $(wildcard *.c)
+CXX = g++
+CXXFLAGS = -Wall
+SRC = $(wildcard *.cpp)
 EXECUTABLE = astar
 
 all: $(EXECUTABLE)
 
 $(EXECUTABLE): $(SRC)
-	$(CC) $(CFLAGS) $^ -o $@
+	$(CXX) $(CXXFLAGS) $^ -o $@
 
 clean:
 	rm -f $(EXECUTABLE)

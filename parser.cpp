@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <cstring>
+#include <cstdlib>
+#include <algorithm>
 #include "util.h"
 #include "logic.h"
 
@@ -68,16 +71,16 @@ enum Direction promptPlayerMove() {
     switch (ch) {
         case 'w':
         case 'W':
-            return UP;
+            return Direction::UP;
         case 'a':
         case 'A':
-            return LEFT;
+            return Direction::LEFT;
         case 's':
         case 'S':
-            return DOWN;
+            return Direction::DOWN;
         case 'd':
         case 'D':
-            return RIGHT;
+            return Direction::RIGHT;
         default:
             goto promptInput;
     }
@@ -135,25 +138,25 @@ void parseCompressedBoardData(const char *raw, Board board) {
     char *strRow = strtok_r(rawBoard, ROW_DELIMITER, &rawBoard);
 
     int rowIndex = 0;
-    while (strRow != NULL && rowIndex < BOARD_HEIGHT) {
+    while (strRow != nullptr && rowIndex < BOARD_HEIGHT) {
         char *strTile = strtok_r(strRow, COLUMN_DELIMITER, &strRow);
         int columnIndex = 0;
 
-        while (strTile != NULL && columnIndex < BOARD_WIDTH) {
-            if (strstr(strTile, TILE_DELIMITER) != NULL) {
+        while (strTile != nullptr && columnIndex < BOARD_WIDTH) {
+            if (strstr(strTile, TILE_DELIMITER) != nullptr) {
                 char *token = strtok_r(strTile, TILE_DELIMITER, &strTile);
 
-                if (token != NULL) {
+                if (token != nullptr) {
                     int tileId = atoi(token);
                     struct BoardTile tile;
 
                     if (tileId == ONEWAY) {
-                        token = strtok_r(NULL, TILE_DELIMITER, &strTile);
+                        token = strtok_r(nullptr, TILE_DELIMITER, &strTile);
                         int orientation = atoi(token);
                         tile = createOneWayTile(orientation);
                     } 
-                    if (tileId == BOMB) {
-                        token = strtok_r(NULL, TILE_DELIMITER, &strTile);
+                    else if (tileId == BOMB) {
+                        token = strtok_r(nullptr, TILE_DELIMITER, &strTile);
                         int fuse = atoi(token);
                         tile = createBombTile(fuse);
                     }
@@ -165,12 +168,12 @@ void parseCompressedBoardData(const char *raw, Board board) {
                 board[rowIndex][columnIndex] = createBoardTile(tileId);
             }
 
-            strTile = strtok_r(NULL, COLUMN_DELIMITER, &strRow);
+            strTile = strtok_r(nullptr, COLUMN_DELIMITER, &strRow);
             columnIndex++;
         }
 
-        strRow = strtok_r(NULL, ROW_DELIMITER, &rawBoard);
-        rowIndex++;
+        strRow = strtok_r(nullptr, ROW_DELIMITER, &rawBoard);
+        rowIndex = std::min(rowIndex + 1, BOARD_HEIGHT);
     }
 
     free(freeRawBoard);
