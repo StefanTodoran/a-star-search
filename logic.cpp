@@ -39,7 +39,7 @@ void initializeGame(Board board, GameState *game) {
 
     Position position;
     getSpawnPosition(board, &position);
-    board[position.y][position.x] = createBoardTile(EMPTY);
+    game->board[position.y][position.x] = createBoardTile(EMPTY);
     game->player = position;
     
     const int maxCoins = countInstancesInBoard(board, COIN);
