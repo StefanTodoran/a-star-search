@@ -19,10 +19,6 @@ import { db } from "./firebase";
 // ======================== \\
 // DOCUMENT TYPE INTERFACES \\
 
-interface MetadataDocument {
-    officialLevelsUpdated: Timestamp,
-}
-
 export interface OfficialLevelDocument {
     id: string,
     name: string,

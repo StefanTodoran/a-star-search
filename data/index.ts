@@ -29,20 +29,20 @@ async function main() {
     fse.removeSync(levelsFile);
 
     if (fse.existsSync(levelsFile)) {
-        log(`Unable to delete ${levelsFile}, ensure file is not being edited elsewhere.`, LogStatus.ERROR);
-        return 1;
+        log(`Unable to delete ${levelsFile}, ensure file is not being edited elsewhere.\n`, LogStatus.ERROR);
+        process.exit(1);
     }
     
     log(`Writing new raw board data to ${levelsFile} synchronously.`);
     fse.writeFileSync(levelsFile, writeLines);
     
     if (!fse.existsSync(levelsFile)) {
-        log(`Write to ${levelsFile} failed! Levels have not been saved.`, LogStatus.ERROR);
-        return 1;
+        log(`Write to ${levelsFile} failed! Levels have not been saved.\n`, LogStatus.ERROR);
+        process.exit(1);
     }
 
-    log(`Successfully wrote ${rawBoards.length} raw boards to levels file!`, LogStatus.GOOD);
-    return 0;
+    log(`Successfully wrote ${rawBoards.length} raw boards to levels file!\n`, LogStatus.GOOD);
+    process.exit(0);
 }
 
 log("\nFetching official levels from server...");

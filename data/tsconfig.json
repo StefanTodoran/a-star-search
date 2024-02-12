@@ -5,13 +5,12 @@
         "target": "ESNext",
         "module": "CommonJS",
         "lib": ["es6"],
+        "skipLibCheck": true,
         "moduleResolution": "Node",
-        "allowImportingTsExtensions": true,
         "resolveJsonModule": true,
         "isolatedModules": true,
-        "noEmit": true,
         "jsx": "react-native",
-        "allowJs": true,
+        "allowJs": false,
         "strict": true,
         "outDir": "build",
         "noUnusedLocals": true,
@@ -23,9 +22,8 @@
         "noImplicitReturns": true,
         "allowUnreachableCode": false,
         "removeComments": true,
-        "checkJs": true,
     },
-    // "exclude": [
-    //   "node_modules"
-    // ],
+    "exclude": [
+      "node_modules"
+    ],
 }
