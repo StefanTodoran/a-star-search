@@ -2,3 +2,6 @@
 astar
 test
 **/Makefile
+**.js
+**/node_modules
+data/build

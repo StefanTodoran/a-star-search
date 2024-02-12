@@ -1,6 +1,6 @@
 #include <cstdint>
 #include <stdlib.h>
-#include <set>
+#include <unordered_set>
 #include <queue>
 #include <iostream>  // for std::cout
 #include <ctime>     // for std::clock
@@ -8,6 +8,7 @@
 #include "logic.h"
 #include "heuristics.h"
 #include "search.h"
+#include "io.h"      // for printBoard
 
 bool areBoardStatesEqual(const Board boardA, const Board boardB) {
     for (int y = 0; y < BOARD_HEIGHT; y++) {
@@ -102,21 +103,17 @@ struct CompareNodes {
     }
 };
 
-struct GameStateCompare {
-    bool operator()(const GameState& a, const GameState& b) const {
-        return areGameStatesEqual(&a, &b);
-    }
-};
-
 // std::vector<Direction> aStarSearch(GameState start, HeuristicFunction heuristic) {
 std::vector<Direction> aStarSearch(GameState start) {
     std::clock_t startTime = std::clock();
     std::cout << "\n\nStarting A* search...\n";
 
     SearchNode startState{start, {}};
-    std::set<GameState, GameStateCompare> visited;
+    std::unordered_set<uint64_t> visited;
 
-    int count = 0;
+    int count = 1;
+    int skipped = 0;
+
     // std::priority_queue<SearchNode, std::vector<SearchNode>, CompareNodes> frontier((CompareNodes(heuristic)));
     std::priority_queue<SearchNode, std::vector<SearchNode>, CompareNodes> frontier;
     frontier.push(startState);
@@ -125,26 +122,44 @@ std::vector<Direction> aStarSearch(GameState start) {
         SearchNode currentState = frontier.top();
         frontier.pop();
 
+        // std::cout << "\nSearching: " << currentState.game.player.x << "," << currentState.game.player.y << "\n";
+
         if (currentState.game.won) {
             std::clock_t endTime = std::clock();
             std::cout << "Searched " << count << " nodes.\n";
+            std::cout << "Skipped " << skipped << " duplicates.\n";
             std::cout << "Found a solution in " << static_cast<double>(endTime - startTime) / CLOCKS_PER_SEC << " seconds:\n";
-            for (const auto& step : currentState.path) {
-                std::cout << static_cast<int>(step) << " ";
-            }
+            // for (const auto& step : currentState.path) {
+            //     std::cout << static_cast<int>(step) << " ";
+            // }
             std::cout << std::endl;
             return currentState.path;
         }
 
-        if (visited.find(currentState.game) != visited.end()) {
+        const auto hash = hashGameState(&currentState.game);
+        if (visited.count(hash)) {
+            // std::cout << "State has been visited, skipping.\n";
             continue;
+        } else {
+            skipped++;
+            // std::cout << "State is novel.\n";
+        }
+        visited.insert(hash);
+
+        // std::cout << "\n\nState: " << hash << "\n";
+        // printBoard(currentState.game.board, currentState.game.player);
+
+        if (count % 100000 == 0) {
+            system("clear");
+            std::cout << "Searched " << count << " states (" << skipped << " duplicates).\n";
+            printBoard(currentState.game.board, currentState.game.player);
         }
 
-        visited.insert(currentState.game);
         int numSuccessors;
         SuccessorState successors[4];
         getGameStateSuccessors(currentState.game, successors, &numSuccessors);
 
+        // std::cout << "Found " << numSuccessors << " successor states." << "\n";
         for (int i = 0; i < numSuccessors; ++i) {
             const auto& successor = successors[i];
             std::vector<Direction> path = currentState.path;

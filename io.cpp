@@ -3,13 +3,15 @@
 #include <stdlib.h>
 #include <cstring>
 #include <cstdlib>
+#include <iostream>
 #include <algorithm>
+#include <vector>
 #include "util.h"
 #include "logic.h"
 
 #define MAX_FILE_NAME_LENGTH 100
 #define MAX_LINE_LENGTH 300 // TODO: May need to tweak this later.
-#define LEVELS_FILE "levels.txt"
+#define LEVELS_FILE "data/levels.txt"
 
 char* identifyFile() {
     char* fileName = (char*)malloc(MAX_FILE_NAME_LENGTH * sizeof(char));
@@ -177,4 +179,54 @@ void parseCompressedBoardData(const char *raw, Board board) {
     }
 
     free(freeRawBoard);
+}
+
+void printBoard(const Board board, const Position player) {
+    for (int i = 0; i < BOARD_HEIGHT; i++) {
+        for (int j = 0; j < BOARD_WIDTH; j++) {
+            struct BoardTile tile = board[i][j];
+            int tileId = tile.id;
+
+            if (i == player.y && j == player.x) {
+                printf("%s %s ", RESET BOLD, "P");
+            } else if (tileId == BOMB) {
+                // Determine padding based on the fuse timer.
+                int padding = (tile.fuse < 10) ? 2 : 1;
+                printf("%s%*d ", tileColors[tileId], padding, tile.fuse);
+            } else {
+                // Determine padding based on the number of digits.
+                int padding = (tileId < 10) ? 2 : 1;
+                printf("%s%*d ", tileColors[tileId], padding, tileId);
+            }
+        }
+        printf(RESET "\n");
+    }
+}
+
+void printInventory(GameState *game) {
+    printf("%d keys, %d/%d coins\n", game->keys, game->coins, game->maxCoins);
+}
+
+void printPath(const std::vector<Direction>& directions) {
+    for (const auto& direction : directions) {
+        switch (direction) {
+            case UP:
+                std::cout << "UP ";
+                break;
+            case RIGHT:
+                std::cout << "RIGHT ";
+                break;
+            case DOWN:
+                std::cout << "DOWN ";
+                break;
+            case LEFT:
+                std::cout << "LEFT ";
+                break;
+            default:
+                // Handle unexpected enum values if necessary
+                std::cout << "UNKNOWN ";
+                break;
+        }
+    }
+    std::cout << std::endl;
 }
